@@ -1,3 +1,5 @@
+#!/usr/bin/bash
+
 read -p "Enter the git repository's name: " REPO_NAME               # /var/git/$REPO_NAME.git
 read -p "Enter the site's name ($REPO_NAME): " SITE_NAME            # /var/www/$SITE_NAME
 
