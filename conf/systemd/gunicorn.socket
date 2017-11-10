@@ -1,0 +1,12 @@
+#!/usr/bin/fish
+[Unit]
+Description=gunicorn socket
+After=rexster.service
+
+[Socket]
+ListenStream=/tmp/gunicorn.sock
+ListenStream=127.0.0.1:3000
+#ListenStream=[::]:8000
+
+[Install]
+WantedBy=sockets.target

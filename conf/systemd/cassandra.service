@@ -1,0 +1,15 @@
+[Unit]
+Description=Cassandra Daemon
+After=network.target
+Before=rexster.service
+
+[Service]
+User=freeth
+Group=freeth
+PIDFile=/tmp/cassandra.pid
+ExecStart=/home/freeth/Softwares/apache-cassandra-2.0.8/bin/cassandra -p /tmp/cassandra.pid
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+
+[Install]
+WantedBy=multi-user.target
