@@ -1,0 +1,15 @@
+[Unit]
+Description=Rexster Daemon
+After=network.target cassandra.service elasticsearch.service
+
+[Service]
+User=freeth
+Group=freeth
+PIDFile=/tmp/rexster.pid
+WorkingDirectory=/home/freeth/Softwares/rexster-server-2.5.0
+ExecStart=/home/freeth/Softwares/rexster-server-2.5.0/bin/rexster.sh --start
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+
+[Install]
+WantedBy=multi-user.target

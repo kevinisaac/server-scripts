@@ -1,0 +1,175 @@
+set encoding=utf-8
+set nocompatible
+set backspace=indent,eol,start
+set tabstop=4
+set shiftwidth=4
+set expandtab
+set smartindent
+set history=50
+set ruler
+set showcmd
+set wrap
+set sidescroll=10                           " scroll with 10 characters side offset
+set incsearch
+set so=5                                    " provides a gap while scrolling
+set autowrite
+set number                                  " sets the line number
+set relativenumber                          " sets the relative line number
+set nocp                                    " omnicpp installation
+set mouse=a
+
+" Set no backup or swapfile
+set nobackup
+set noswapfile
+
+" set option& sets the default value
+if has("vms")
+    set nobackup
+" else
+"     set backup
+"     set backupext=.bak                      " sets the default backup extension
+    " set backupdir=.bak                      " sets the default backup directory
+endif
+" set patchmode=.orig                         " keeps the original file
+" autocmd Filetype text setlocal textwidth=20
+
+filetype plugin on
+filetype indent on
+
+" syntax options
+set t_Co=256
+" set background=dark
+syntax enable
+" syntax clear - disable syntax highlighting for a moment
+" syntax off - disable syntax highlighting permanently
+" colorscheme vitamins
+colorscheme srcery-drk
+set cursorline
+hi CursorLine cterm=bold ctermbg=234
+
+au BufRead *.php set ft=php.html
+au BufNewFile *.php set ft=php.html
+
+" Editor ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+set tw=0
+set clipboard=unnamed
+
+" Windows -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+" autocmd BufEnter * silent! lcd %:p:h
+noremap ;a 10<c-w><c-w>
+noremap ;1  1<c-w><c-w>
+noremap ;2  2<c-w><c-w>
+noremap ;3  3<c-w><c-w>
+noremap ;4  4<c-w><c-w>
+noremap ;5  5<c-w><c-w>
+noremap ;6  6<c-w><c-w>
+noremap ;7  7<c-w><c-w>
+noremap ;8  8<c-w><c-w>
+noremap ;9  9<c-w><c-w>
+
+" Backup and original file -------------------------------------------------------------------------------------------------------------------------------------------------------------
+" set backupdir=./.backup/
+
+" execute pathogen#infect()
+
+" Set filetype tab spaces
+autocmd Filetype html,css,xml :setlocal sw=2 ts=2 sts=2
+au BufNewFile,BufRead *.jade set filetype=html
+autocmd BufRead,BufNewFile *.jade setlocal ft=jade
+au BufRead,BufNewFile *.fish set filetype=fish
+" au BufRead,BufNewFile *.jinja set filetype=jinja.html
+
+" Autosave CSS file
+" autocmd  TextChanged,TextChangedI <buffer> silent write
+
+" Folding
+" set foldmethod=manual
+set foldmethod=indent
+set foldnestmax=10
+noremap <Space> za
+noremap <NUL> zR
+
+" Vim vertical line at 80
+au Filetype python set colorcolumn=80
+highlight ColorColumn ctermbg=234
+" guibg=234
+
+" For vim-airline
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 1
+set laststatus=2
+let g:airline_theme="hogan"
+" let Powerline_symbols='fancy'
+" set font=Inconsolata\ for\ Powerline
+
+" CtrlP settings
+let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
+
+call plug#begin('~/.vim/plugged')
+    " Plug 'Chiel92/vim-autoformat'
+    Plug 'editorconfig/editorconfig-vim'
+    Plug 'ctrlpvim/ctrlp.vim'           " The search plugin
+    Plug 'xolox/vim-session'            " Session manager
+    Plug 'xolox/vim-misc'               " Dependency for Session manager
+
+    Plug 'gaving/vim-textobj-argument'  " To treat arguments like objects
+    Plug 'tomtom/tcomment_vim'          " For toggling comment
+
+    Plug 'vim-airline/vim-airline'
+    Plug 'vim-airline/vim-airline-themes'
+    Plug 'Yggdroot/indentLine'          " The thin line along indentation
+
+    Plug 'mattn/emmet-vim'
+    Plug 'garbas/vim-snipmate'
+    Plug 'MarcWeber/vim-addon-mw-utils' " Dependency for snipmate
+    Plug 'tomtom/tlib_vim'              " Dependency for snipmate
+    Plug 'honza/vim-snippets'           " Optional dependency for snipmate
+    Plug 'tpope/vim-surround'
+    Plug 'jiangmiao/auto-pairs'         " Pair ', \", {, [ and (
+
+    Plug 'Glench/Vim-Jinja2-Syntax'
+call plug#end()
+
+" Emmet Plugin
+let g:user_emmet_expandabbr_key = '<C-X>'
+let g:user_emmet_togglecomment_key = '<C-V>'
+
+" indentLine Plugin
+let g:indentLine_color_term = 7
+
+" ctrlp.vim Plugin
+set shell=/bin/bash " Required if bash is not used as the user's shell
+let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
+
+" Vim sessions
+let g:session_autosave = 'no'
+let g:session_autoload = 'no'
+
+" Custom Vim commands
+" command Evimrc :e ~/.vim/vimrc
+
+
+
+
+" View manipulation
+noremap tt  :tab split<CR>
+map '' :vsplit<CR>
+map "" :split<CR>
+map ;; :wq<CR>
+map <Tab> <c-w><c-w>
+
+" File manipulation
+map <c-s> <Esc>:w<CR>
+inoremap <c-s> <Esc>:w<CR>
+noremap <c-q> <Esc>:q<CR>
+noremap <C-e> <Esc>:so ~/.vim/vimrc<CR>
+
+noremap <C-Up> ddkP
+noremap <C-Down> ddp
+
+" Emmet mapping
+
+" Remapping tcomment toggle key
+map <C-c> gcc
+
+" set background=dark

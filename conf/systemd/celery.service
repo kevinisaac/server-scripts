@@ -1,0 +1,21 @@
+[Unit]
+Description=celery daemon
+After=network.target rabbitmq-server.service
+
+[Service]
+Type=forking
+User=freeth
+Group=freeth
+EnvironmentFile=/home/freeth/conf/celery/celery.conf
+WorkingDirectory=/var/www/freeth.in
+ExecStart=/var/www/freeth.in/venv/bin/celery multi start $CELERYD_NODES \
+	-A $CELERY_APP --logfile=${CELERYD_LOG_FILE} \
+	--pidfile=${CELERYD_PID_FILE} --loglevel="${CELERYD_LOG_LEVEL}" $CELERYD_OPTS
+ExecStop=/var/www/freeth.in/venv/bin/celery multi stopwait $CELERYD_NODES \
+	--pidfile=${CELERYD_PID_FILE}
+ExecReload=/var/www/freeth.in/venv/bin/celery multi restart $CELERYD_NODES \
+	-A $CELERY_APP --pidfile=${CELERYD_PID_FILE} --logfile=${CELERYD_LOG_FILE} \
+	--loglevel="${CELERYD_LOG_LEVEL}" $CELERYD_OPTS
+
+[Install]
+WantedBy=multi-user.target

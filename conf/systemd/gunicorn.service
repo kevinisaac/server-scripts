@@ -1,0 +1,17 @@
+[Unit]
+Description=gunicorn daemon
+#Requires=gunicorn.socket
+After=network.target
+
+[Service]
+User=freeth
+Group=freeth
+PIDFile=/tmp/gunicorn.pid
+EnvironmentFile=/home/freeth/conf/gunicorn/gunicorn.conf.py
+WorkingDirectory=/var/www/freeth.in
+ExecStart=/var/www/freeth.in/venv/bin/gunicorn --pid /tmp/gunicorn.pid --reload -c /home/freeth/conf/gunicorn/gunicorn.conf.py main:appInstance
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+
+[Install]
+WantedBy=multi-user.target

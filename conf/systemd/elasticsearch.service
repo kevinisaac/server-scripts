@@ -1,0 +1,14 @@
+[Unit]
+Description=Elasticsearch Daemon
+After=network.target
+
+[Service]
+User=freeth
+Group=freeth
+PIDFile=/tmp/elasticsearch.pid
+ExecStart=/home/freeth/Softwares/elasticsearch-1.2.1/bin/elasticsearch -p /tmp/elasticsearch.pid
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+
+[Install]
+WantedBy=multi-user.target
