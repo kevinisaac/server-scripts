@@ -13,7 +13,7 @@ sudo chmod 600 ~/.ssh/authorized_keys
 echo "Done!"
 
 ## Add vim configuration file
-cp conf/.vim ~/
+cp conf/.vim ~/ -r
 
 # Install oh-my-fish for $USERNAME:
 # -------------------

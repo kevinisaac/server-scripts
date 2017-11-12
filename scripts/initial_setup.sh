@@ -73,7 +73,7 @@ curl -L https://get.oh-my.fish | fish
 fish -c "omf install $ROOT_OMFTHEME"
 
 # Add vim configuration file to root user
-sudo cp conf/.vim /root/
+sudo cp conf/.vim /root/ -r
 
 # Block all the ports except 22.
 # By default, ufw blocks incoming to all the ports.
@@ -124,8 +124,45 @@ echo "Done setting up UFW (firewall)!"
 # su - $USERNAME
 
 # Set up SSH key for $USERNAME - Assuming the key is setup for the root account
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-su $USERNAME -c "bash $SCRIPT_DIR/_initial_user_setup.sh $USERNAME $OMFTHEME"
+# SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# su $USERNAME -c "bash $SCRIPT_DIR/_initial_user_setup.sh $USERNAME $OMFTHEME"
+
+## Set up ssh keys -------------------------------------------------------------------------
+su $USERNAME <<'EOF'
+
+echo "Setting up SSH keys for $USERNAME..."
+echo "Enter root password if asked.."
+mkdir ~/.ssh
+sudo chmod 700 ~/.ssh
+sudo cp /root/.ssh/authorized_keys ~/.ssh/
+sudo chmod 600 ~/.ssh/authorized_keys
+echo "Done!"
+
+## Add vim configuration file
+cp conf/.vim ~/ -r
+
+# Install oh-my-fish for $USERNAME:
+# -------------------
+echo "Installing oh-my-fish.."
+curl -L https://get.oh-my.fish | fish
+# curl -L https://get.oh-my.fish > install
+# fish install --path=/home/$USERNAME/.local/share/omf --config=/home/$USERNAME/.config/omf
+
+# omf is installed. Choose an omf theme or leave it with the default theme.
+# List all the omf themes.
+# fish -c 'omf theme'
+
+# Choose a theme and install it.
+fish -c "omf install $OMFTHEME"
+
+# Install fishmarks
+#--------------------
+echo "Installing fishmarks for $USERNAME..."
+curl -L https://github.com/techwizrd/fishmarks/raw/master/install.fish | fish
+
+EOF
+
+## ------------------------------------------------------------------------------------------
 
 
 echo "Changing default shell to fish for root and $USERNAME..."
