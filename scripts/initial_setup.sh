@@ -22,10 +22,10 @@
 
 
 SERVER_IP=`ip route get 1 | awk '{print $NF;exit}'`
-DEFAULT_USERNAME = 'zephony'
-DEFAULT_GROUPNAME = 'dev'
-DEFAULT_OMFTHEME = 'gentoo'
-DEFAULT_PACKAGES = 'fish'
+DEFAULT_USERNAME='zephony'
+DEFAULT_GROUPNAME='dev'
+DEFAULT_OMFTHEME='gentoo'
+DEFAULT_PACKAGES='fish'
 
 ## Create users and groups
 read -p "Enter the name of the user ($DEFAULT_USERNAME): " USERNAME
