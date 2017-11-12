@@ -125,7 +125,7 @@ echo "Done setting up UFW (firewall)!"
 
 # Set up SSH key for $USERNAME - Assuming the key is setup for the root account
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-su $USERNAME -c "$SCRIPT_DIR/_initial_user_setup.sh $USERNAME $OMFTHEME"
+su $USERNAME -c "bash $SCRIPT_DIR/_initial_user_setup.sh $USERNAME $OMFTHEME"
 
 
 echo "Changing default shell to fish for root and $USERNAME..."
