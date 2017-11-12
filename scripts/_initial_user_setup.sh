@@ -1,3 +1,5 @@
+#!/bin/bash
+
 USERNAME=$1
 OMFTHEME=$2
 

@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # Thing to do in every server machine
 # -----------------------------------
 
