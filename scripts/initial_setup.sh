@@ -25,16 +25,19 @@ SERVER_IP=`ip route get 1 | awk '{print $NF;exit}'`
 DEFAULT_USERNAME='zephony'
 DEFAULT_GROUPNAME='dev'
 DEFAULT_OMFTHEME='bobthefish'
+DEFAULT_ROOT_OMFTHEME='baman'
 DEFAULT_PACKAGES='fish'
 
 ## Create users and groups
 read -p "Enter the name of the user ($DEFAULT_USERNAME): " USERNAME
-read -p "Enter the developers group name ($DEFAULT_GROUPNAME): " GROUPNAME
-read -p "Enter the omf theme you want to use ($DEFAULT_OMFTHEME): " OMFTHEME
-
 USERNAME=${USERNAME:-DEFAULT_USERNAME}
+read -p "Enter the developers group name ($DEFAULT_GROUPNAME): " GROUPNAME
 GROUPNAME=${GROUPNAME:-DEFAULT_GROUPNAME}
+read -p "Enter the omf theme you want to use for root ($DEFAULT_ROOT_OMFTHEME): " ROOT_OMFTHEME
+ROOT_OMFTHEME=${ROOT_OMFTHEME:-DEFAULT_ROOT_OMFTHEME}
+read -p "Enter the omf theme you want to use for $USERNAME ($DEFAULT_OMFTHEME): " OMFTHEME
 OMFTHEME=${OMFTHEME:-DEFAULT_OMFTHEME}
+
 
 # Create group and user
 groupadd $GROUPNAME
@@ -56,6 +59,21 @@ echo "Changing default shell to fish for root and $USERNAME..."
 usermod root -s /usr/bin/fish
 usermod $USERNAME -s /usr/bin/fish
 echo "Done!"
+
+# Install oh-my-fish for root user:
+# -------------------
+echo "Installing oh-my-fish for root user..."
+curl -L https://github.com/oh-my-fish/oh-my-fish/raw/master/bin/install | fish
+
+# omf is installed. Choose an omf theme or leave it with the default theme.
+# List all the omf themes.
+# fish -c 'omf theme'
+
+# Choose a theme and install it.
+fish -c "omf install $ROOT_OMFTHEME"
+
+# Add vim configuration file to root user
+sudo cp conf/.vim /root/
 
 # Block all the ports except 22.
 # By default, ufw blocks incoming to all the ports.
@@ -119,10 +137,12 @@ sudo vim /etc/ssh/sshd_config
 echo "Restarting ssh server..."
 sudo systemctl restart ssh
 
+# Add vim configuration file to $USERNAME
+sudo cp conf/.vim ~/
 
-# Install oh-my-fish:
+# Install oh-my-fish for $USERNAME:
 # -------------------
-echo "Installing fish.."
+echo "Installing oh-my-fish.."
 curl -L https://github.com/oh-my-fish/oh-my-fish/raw/master/bin/install | fish
 
 # omf is installed. Choose an omf theme or leave it with the default theme.
