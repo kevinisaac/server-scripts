@@ -45,6 +45,7 @@ useradd $USERNAME -G sudo,$GROUPNAME -m
 echo "Enter root password below.."
 passwd
 # echo "Enter password for $USERNAME below.."
+echo "Enter password for $USERNAME below.."
 passwd $USERNAME
 
 # Update, Upgrade and install all the required packages.
@@ -73,7 +74,7 @@ echo "Only allowed port now is 22."
 
 # This will start the ufw service and enables it in startup.
 # Make sure ufw service is running using
-sudo service ufw status
+# sudo service ufw status
 echo "Done setting up UFW (firewall)!"
 
 # Don't exit your user session, until you make sure that the port 22 is open.
