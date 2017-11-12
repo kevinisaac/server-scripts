@@ -55,15 +55,12 @@ passwd $USERNAME
 apt-get update
 apt-get upgrade
 apt-get install $DEFAULT_PACKAGES
-echo "Changing default shell to fish for root and $USERNAME..."
-usermod root -s /usr/bin/fish
-usermod $USERNAME -s /usr/bin/fish
-echo "Done!"
 
 # Install oh-my-fish for root user:
 # -------------------
 echo "Installing oh-my-fish for root user..."
-curl -L https://github.com/oh-my-fish/oh-my-fish/raw/master/bin/install | fish
+# curl -L https://github.com/oh-my-fish/oh-my-fish/raw/master/bin/install | fish
+curl -L https://get.oh-my.fish | fish
 
 # omf is installed. Choose an omf theme or leave it with the default theme.
 # List all the omf themes.
@@ -120,43 +117,23 @@ echo "Done setting up UFW (firewall)!"
 # sudo apt-get install zabbix-agent
 
 # Change to $USERNAME
-echo "Changing to user '$USERNAME'..."
-su - $USERNAME
+# echo "Changing to user '$USERNAME'..."
+# su - $USERNAME
 
 # Set up SSH key for $USERNAME - Assuming the key is setup for the root account
-echo "Setting up SSH keys..."
-mkdir ~/.ssh
-chmod 700 ~/.ssh
-# echo "Enter password for $USERNAME if asked.."
-sudo cp /root/.ssh/authorized_keys ~/.ssh/
-chmod 600 ~/.ssh/authorized_keys
-echo "Done setting up SSH keys!"
+su $USERNAME -c "./_initial_user_setup.sh $USERNAME $OMFTHEME"
 
+
+echo "Changing default shell to fish for root and $USERNAME..."
+sudo usermod root -s /usr/bin/fish
+sudo usermod $USERNAME -s /usr/bin/fish
+echo "Done!"
+
+## Set up SSH server
 echo "Configuring SSH server..."
-sudo vim /etc/ssh/sshd_config
+vim /etc/ssh/sshd_config
 echo "Restarting ssh server..."
-sudo systemctl restart ssh
-
-# Add vim configuration file to $USERNAME
-sudo cp conf/.vim ~/
-
-# Install oh-my-fish for $USERNAME:
-# -------------------
-echo "Installing oh-my-fish.."
-curl -L https://github.com/oh-my-fish/oh-my-fish/raw/master/bin/install | fish
-
-# omf is installed. Choose an omf theme or leave it with the default theme.
-# List all the omf themes.
-# fish -c 'omf theme'
-
-# Choose a theme and install it.
-fish -c "omf install $OMFTHEME"
-
-# Install fishmarks
-#--------------------
-echo "Installing fishmarks for user $USERNAME..."
-curl -L https://github.com/techwizrd/fishmarks/raw/master/install.fish | fish
-echo "Done installing fishmarks!"
+systemctl restart ssh
 
 echo "Congratulations.. Your initial server setup is done!"
 echo "You can now exit login to the server as: ssh $USERNAME@$SERVER_IP"
