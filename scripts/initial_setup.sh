@@ -121,7 +121,7 @@ echo "Done setting up UFW (firewall)!"
 # su - $USERNAME
 
 # Set up SSH key for $USERNAME - Assuming the key is setup for the root account
-su $USERNAME -c "./_initial_user_setup.sh $USERNAME $OMFTHEME"
+su $USERNAME -c "`pwd`/_initial_user_setup.sh $USERNAME $OMFTHEME"
 
 
 echo "Changing default shell to fish for root and $USERNAME..."
