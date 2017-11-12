@@ -30,18 +30,20 @@ DEFAULT_PACKAGES='fish'
 
 ## Create users and groups
 read -p "Enter the name of the user ($DEFAULT_USERNAME): " USERNAME
-USERNAME=${USERNAME:-DEFAULT_USERNAME}
+USERNAME=${USERNAME:-$DEFAULT_USERNAME}
 read -p "Enter the developers group name ($DEFAULT_GROUPNAME): " GROUPNAME
-GROUPNAME=${GROUPNAME:-DEFAULT_GROUPNAME}
+GROUPNAME=${GROUPNAME:-$DEFAULT_GROUPNAME}
 read -p "Enter the omf theme you want to use for root ($DEFAULT_ROOT_OMFTHEME): " ROOT_OMFTHEME
-ROOT_OMFTHEME=${ROOT_OMFTHEME:-DEFAULT_ROOT_OMFTHEME}
+ROOT_OMFTHEME=${ROOT_OMFTHEME:-$DEFAULT_ROOT_OMFTHEME}
 read -p "Enter the omf theme you want to use for $USERNAME ($DEFAULT_OMFTHEME): " OMFTHEME
-OMFTHEME=${OMFTHEME:-DEFAULT_OMFTHEME}
+OMFTHEME=${OMFTHEME:-$DEFAULT_OMFTHEME}
 
 
 # Create group and user
 groupadd $GROUPNAME
+echo "Group '$GROUPNAME' created."
 useradd $USERNAME -G sudo,$GROUPNAME -m
+echo "User '$USERNAME' created."
 
 
 # Set passwords for root and $USERNAME
