@@ -20,63 +20,68 @@
 # For steps 1 & 2, follow the instructions in, 
 # https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-14-04
 
-# After completing step 1 & 2, login as the new user and move on to Step 3.
 
-# Step 3:
-# -------
+SERVER_IP=`ip route get 1 | awk '{print $NF;exit}'`
+DEFAULT_USERNAME = 'zephony'
+DEFAULT_GROUPNAME = 'dev'
+DEFAULT_OMFTHEME = 'gentoo'
+DEFAULT_PACKAGES = 'fish'
+
+## Create users and groups
+read -p "Enter the name of the user ($DEFAULT_USERNAME): " USERNAME
+read -p "Enter the developers group name ($DEFAULT_GROUPNAME): " GROUPNAME
+read -p "Enter the omf theme you want to use ($DEFAULT_OMFTHEME): " OMFTHEME
+
+USERNAME=${USERNAME:-DEFAULT_USERNAME}
+GROUPNAME=${GROUPNAME:-DEFAULT_GROUPNAME}
+OMFTHEME=${OMFTHEME:-DEFAULT_OMFTHEME}
+
+# Create group and user
+groupadd $GROUPNAME
+useradd $USERNAME -G sudo,$GROUPNAME -m
+
+
+# Set passwords for root and $USERNAME
+echo "Enter root password below.."
+passwd
+# echo "Enter password for $USERNAME below.."
+passwd $USERNAME
+
 # Update, Upgrade and install all the required packages.
+apt-get update
+apt-get upgrade
+apt-get install $DEFAULT_PACKAGES
+echo "Changing default shell to fish for root and $USERNAME..."
+usermod root -s /usr/bin/fish
+usermod $USERNAME -s /usr/bin/fish
+echo "Done!"
 
-sudo apt-get update
-sudo apt-get upgrade
-sudo apt-get install ssh vim wget unzip tar git curl ufw
-
-# Install fish:
-# -------------
-echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/2/Debian_8.0/ /' | sudo tee -a /etc/apt/sources.list.d/fish.list
-wget -qO - http://download.opensuse.org/repositories/shells:fish:release:2/Debian_8.0/Release.key | sudo apt-key add -
-sudo apt-get update
-sudo apt-get install fish
-sudo usermod freeth -s /usr/bin/fish
-
-# Install oh-my-fish:
-# -------------------
-curl -L https://github.com/oh-my-fish/oh-my-fish/raw/master/bin/install | fish
-
-# omf is installed. Choose an omf theme or leave it with the default theme.
-# List all the omf themes.
-fish -c 'omf theme'
-
-# Choose a theme and install it.
-fish -c 'omf install scorphish'
-
-# Step 4:
-# -------
 # Block all the ports except 22.
 # By default, ufw blocks incoming to all the ports.
 # Allow access to ssh port. If the default port for ssh is changed,
 # then replace 'ssh' with the respective port number in the command.
 # Example: sudo ufw allow port_number/tcp
-sudo ufw allow ssh/tcp
+echo "Setting up UFW (firewall)..."
+ufw allow ssh/tcp
+# Enable ufw using,
 
 # To make sure if the rule is added, use,
-sudo ufw show added
+# sudo ufw show added
 
-# The above command will list all the rules that are added.
-# Enable ufw using,
 sudo ufw enable
+echo "Only allowed port now is 22."
 
-# This will start the ufw service and enab les it in startup.
+# This will start the ufw service and enables it in startup.
 # Make sure ufw service is running using
 sudo service ufw status
+echo "Done setting up UFW (firewall)!"
 
 # Don't exit your user session, until you make sure that the port 22 is open.
 # To check that, open a new terminal and try to login.
 # If it doesn't work, then there is something is wrong in your rule. 
 
-# Step 5:
-# -------
 # Create directories to store configuration files and scripts.
-mkdir conf scripts logs
+# mkdir conf scripts logs
 
 # Clone the freeth configuration remote repository.
 # git clone https://bitbucket.org/freeth-in/freeth-conf.git 
@@ -84,19 +89,59 @@ mkdir conf scripts logs
 # Step 6:
 # -------
 # Configure the server's time.
-sudo dpkg-reconfigure tzdata
+# sudo dpkg-reconfigure tzdata
 
 # Select the required time zone. UTC is adviceable.
 # Install ntp daemon
-sudo apt-get install ntp
+# sudo apt-get install ntp
 
 # Step 7:
 # -------
 # Install zabbix agent to collect monitoring metrics about the server.
-sudo apt-get install zabbix-agent
+# sudo apt-get install zabbix-agent
+
+# Change to $USERNAME
+echo "Changing to user '$USERNAME'..."
+su - $USERNAME
+
+# Set up SSH key for $USERNAME - Assuming the key is setup for the root account
+echo "Setting up SSH keys..."
+mkdir ~/.ssh
+chmod 700 ~/.ssh
+# echo "Enter password for $USERNAME if asked.."
+sudo cp /root/.ssh/authorized_keys ~/.ssh/
+chmod 600 ~/.ssh/authorized_keys
+echo "Done setting up SSH keys!"
+
+echo "Configuring SSH server..."
+sudo vim /etc/ssh/sshd_config
+echo "Restarting ssh server..."
+sudo systemctl restart ssh
 
 
-# Thats it for the initial setup of server. This setup is common for every machines# Next steps depends on the server's role. 
+# Install oh-my-fish:
+# -------------------
+echo "Installing fish.."
+curl -L https://github.com/oh-my-fish/oh-my-fish/raw/master/bin/install | fish
+
+# omf is installed. Choose an omf theme or leave it with the default theme.
+# List all the omf themes.
+# fish -c 'omf theme'
+
+# Choose a theme and install it.
+fish -c "omf install $OMFTHEME"
+
+# Install fishmarks
+#--------------------
+echo "Installing fishmarks for user $USERNAME..."
+curl -L https://github.com/techwizrd/fishmarks/raw/master/install.fish | fish
+echo "Done installing fishmarks!"
+
+echo "Congratulations.. Your initial server setup is done!"
+echo "You can now exit login to the server as: ssh $USERNAME@$SERVER_IP"
+
+# Thats it for the initial setup of server. This setup is common for every machine
+# Next steps depends on the server's role. 
 # Follow the instructions in the files that is specific for the server's role.
 
 # Thank you! Have a nice day!.
