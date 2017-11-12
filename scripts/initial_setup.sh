@@ -25,7 +25,7 @@ SERVER_IP=`ip route get 1 | awk '{print $NF;exit}'`
 DEFAULT_USERNAME='zephony'
 DEFAULT_GROUPNAME='dev'
 DEFAULT_OMFTHEME='bobthefish'
-DEFAULT_ROOT_OMFTHEME='baman'
+DEFAULT_ROOT_OMFTHEME='batman'
 DEFAULT_PACKAGES='fish'
 
 ## Create users and groups
