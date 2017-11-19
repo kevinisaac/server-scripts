@@ -25,7 +25,6 @@
 SERVER_IP=`ip route get 1 | awk '{print $NF;exit}'`
 DEFAULT_USERNAME='zephony'
 DEFAULT_GROUPNAME='dev'
-DEFAULT_OMFTHEME='bobthefish'
 DEFAULT_ROOT_OMFTHEME='batman'
 DEFAULT_PACKAGES='fish'
 
@@ -36,8 +35,6 @@ read -p "Enter the developers group name ($DEFAULT_GROUPNAME): " GROUPNAME
 GROUPNAME=${GROUPNAME:-$DEFAULT_GROUPNAME}
 read -p "Enter the omf theme you want to use for root ($DEFAULT_ROOT_OMFTHEME): " ROOT_OMFTHEME
 ROOT_OMFTHEME=${ROOT_OMFTHEME:-$DEFAULT_ROOT_OMFTHEME}
-read -p "Enter the omf theme you want to use for $USERNAME ($DEFAULT_OMFTHEME): " OMFTHEME
-OMFTHEME=${OMFTHEME:-$DEFAULT_OMFTHEME}
 
 
 # Create group and user
@@ -58,19 +55,6 @@ passwd $USERNAME
 apt-get update
 apt-get upgrade
 apt-get install $DEFAULT_PACKAGES
-
-# Install oh-my-fish for root user:
-# -------------------
-echo "Installing oh-my-fish for root user..."
-# curl -L https://github.com/oh-my-fish/oh-my-fish/raw/master/bin/install | fish
-curl -L https://get.oh-my.fish | fish
-
-# omf is installed. Choose an omf theme or leave it with the default theme.
-# List all the omf themes.
-# fish -c 'omf theme'
-
-# Choose a theme and install it.
-fish -c "omf install $ROOT_OMFTHEME"
 
 # Add vim configuration file to root user
 sudo cp conf/.vim /root/ -r
@@ -128,7 +112,6 @@ echo "Done setting up UFW (firewall)!"
 # su $USERNAME -c "bash $SCRIPT_DIR/_initial_user_setup.sh $USERNAME $OMFTHEME"
 
 ## Set up ssh keys -------------------------------------------------------------------------
-su $USERNAME <<'EOF'
 
 echo "Setting up SSH keys for $USERNAME..."
 echo "Enter root password if asked.."
@@ -137,33 +120,6 @@ sudo chmod 700 ~/.ssh
 sudo cp /root/.ssh/authorized_keys ~/.ssh/
 sudo chmod 600 ~/.ssh/authorized_keys
 echo "Done!"
-
-## Add vim configuration file
-cp conf/.vim ~/ -r
-
-# Install oh-my-fish for $USERNAME:
-# -------------------
-echo "Installing oh-my-fish.."
-curl -L https://get.oh-my.fish | fish
-# curl -L https://get.oh-my.fish > install
-# fish install --path=/home/$USERNAME/.local/share/omf --config=/home/$USERNAME/.config/omf
-
-# omf is installed. Choose an omf theme or leave it with the default theme.
-# List all the omf themes.
-# fish -c 'omf theme'
-
-# Choose a theme and install it.
-fish -c "omf install $OMFTHEME"
-
-# Install fishmarks
-#--------------------
-echo "Installing fishmarks for $USERNAME..."
-curl -L https://github.com/techwizrd/fishmarks/raw/master/install.fish | fish
-
-EOF
-
-## ------------------------------------------------------------------------------------------
-
 
 echo "Changing default shell to fish for root and $USERNAME..."
 sudo usermod root -s /usr/bin/fish
@@ -176,8 +132,29 @@ vim /etc/ssh/sshd_config
 echo "Restarting ssh server..."
 systemctl restart ssh
 
+## Add vim configuration file
+cp conf/.vim ~/ -r
+
+# Install oh-my-fish for root user:
+# -------------------
+echo "Installing oh-my-fish for root user..."
+# curl -L https://github.com/oh-my-fish/oh-my-fish/raw/master/bin/install | fish
+curl -L https://get.oh-my.fish | fish
+
+# omf is installed. Choose an omf theme or leave it with the default theme.
+# List all the omf themes.
+# fish -c 'omf theme'
+
+# Choose a theme and install it.
+fish -c "omf install $ROOT_OMFTHEME"
+
+# Install fishmarks
+#--------------------
+echo "Installing fishmarks for root..."
+curl -L https://github.com/techwizrd/fishmarks/raw/master/install.fish | fish
+
 echo "Congratulations.. Your initial server setup is done!"
-echo "You can now exit login to the server as: ssh $USERNAME@$SERVER_IP"
+echo "Now, login as $USERNAME and execute: bash scripts/initial_user_setup.sh"
 
 # Thats it for the initial setup of server. This setup is common for every machine
 # Next steps depends on the server's role. 

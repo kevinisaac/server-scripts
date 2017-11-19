@@ -1,11 +1,12 @@
 #!/bin/bash
 
-USERNAME=$1
-OMFTHEME=$2
+USERNAME=`whoami`
+DEFAULT_OMFTHEME='bobthefish'
+read -p "Enter the omf theme you want to use for $USERNAME ($DEFAULT_OMFTHEME): " OMFTHEME
+OMFTHEME=${OMFTHEME:-$DEFAULT_OMFTHEME}
 
 ## Set up ssh keys
 echo "Setting up SSH keys for $USERNAME..."
-echo "Enter root password if asked.."
 mkdir ~/.ssh
 sudo chmod 700 ~/.ssh
 sudo cp /root/.ssh/authorized_keys ~/.ssh/
@@ -33,3 +34,6 @@ fish -c "omf install $OMFTHEME"
 #--------------------
 echo "Installing fishmarks for $USERNAME..."
 curl -L https://github.com/techwizrd/fishmarks/raw/master/install.fish | fish
+
+echo "Congratulations.. Setup for $USERNAME is done!"
+echo "You can now exit login to the server as: ssh $USERNAME@$SERVER_IP"
