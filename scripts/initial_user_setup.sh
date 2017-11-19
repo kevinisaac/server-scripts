@@ -12,6 +12,8 @@ mkdir ~/.ssh
 sudo chmod 700 ~/.ssh
 sudo cp /root/.ssh/authorized_keys ~/.ssh/
 sudo chmod 600 ~/.ssh/authorized_keys
+echo "Restarting ssh server..."
+systemctl restart ssh
 echo "Done!"
 
 ## Add vim configuration file
