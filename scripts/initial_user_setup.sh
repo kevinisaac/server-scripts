@@ -16,6 +16,7 @@ echo "Done!"
 ## Add vim configuration file
 cp conf/.vim ~/ -r
 
+cd ~
 # Install oh-my-fish for $USERNAME:
 # -------------------
 echo "Installing oh-my-fish.."
