@@ -1,5 +1,6 @@
 #!/bin/bash
 
+SERVER_IP=`ip route get 1 | awk '{print $NF;exit}'`
 USERNAME=`whoami`
 DEFAULT_OMFTHEME='bobthefish'
 read -p "Enter the omf theme you want to use for $USERNAME ($DEFAULT_OMFTHEME): " OMFTHEME
