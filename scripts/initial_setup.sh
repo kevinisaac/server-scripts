@@ -157,6 +157,10 @@ fish -c "omf install $ROOT_OMFTHEME"
 echo "Installing fishmarks for root..."
 curl -L https://github.com/techwizrd/fishmarks/raw/master/install.fish | fish
 
+# Copy the fishmarks of the major directories
+echo "Preloading fish marks for root.."
+cp .sdirs ~/ && echo 'Done!'
+
 echo "Congratulations.. Your initial server setup is done!"
 echo "Now, login as $USERNAME and execute: bash scripts/initial_user_setup.sh"
 

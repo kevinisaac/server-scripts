@@ -75,6 +75,15 @@ sudo ln -s /etc/nginx/sites-available/$NEW_NGINX_FILE_NAME /etc/nginx/sites-enab
 sudo rm /etc/nginx/sites-enabled/default
 sudo systemctl restart nginx && echo 'Done!'
 
+# Setting fish marks
+echo "Setting fish marks..."
+cat "export DIR_g$REPO_NAME=\"$REPO_DIR\"" >> ~/.sdirs
+cat "export DIR_$SITE_NAME=\"$SITE_DIR\"" >> ~/.sdirs
+echo "Done!"
+
+echo "Setting permissions for directories..."
+sudo chown $USERNAME:$USERNAME ~ -R && echo "Done!"
+
 # Allow port 80 via firewall
 echo "Allowing 'Nginx Full' on Nginx..."
 sudo ufw allow 'Nginx Full' && echo 'Done!'

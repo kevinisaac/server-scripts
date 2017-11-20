@@ -40,6 +40,10 @@ fish -c "omf install $OMFTHEME"
 echo "Installing fishmarks for $USERNAME..."
 curl -L https://github.com/techwizrd/fishmarks/raw/master/install.fish | fish
 
+# Copy the fishmarks of the major directories
+echo "Preloading fish marks for $USERNAME..."
+cp .sdirs ~/ && echo 'Done!'
+
 echo "Cloning kevinisaac/server-scripts"
 git clone https://github.com/kevinisaac/server-scripts.git
 
