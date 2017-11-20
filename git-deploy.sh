@@ -43,7 +43,7 @@ pip install -r requirements.txt
 NEW_SERVICE_FILE_NAME=${SITE_NAME:-$REPO_NAME}.service
 NEW_SERVICE_FILE_PATH=/etc/systemd/system/$NEW_SERVICE_FILE_NAME
 echo "Setting up the service file $NEW_SERVICE_FILE_PATH..."
-sudo cp /root/server-scripts/conf/flask_app.service $NEW_SERVICE_FILE_PATH
+sudo cp /home/$USERNAME/server-scripts/conf/flask_app.service $NEW_SERVICE_FILE_PATH
 sudo vim $NEW_SERVICE_FILE_PATH
 
 # Enabling and restarting the service
