@@ -17,7 +17,7 @@ sudo mkdir $SITE_DIR && cd $REPO_DIR && echo "Site is located at: $SITE_DIR"
 
 echo "Setting up group for the directories.."
 sudo chown $USERNAME:$GROUPNAME /var/git -R
-sudo chown $USERNAME:$GROUPNAME /var/www/* -R
+sudo chown $USERNAME:$GROUPNAME /var/www -R
 
 # Git stuff
 echo 'Initializing bare Git repo..'
@@ -33,4 +33,12 @@ git --work-tree=$SITE_DIR --git-dir=$REPO_DIR checkout -f
 sudo chmod +x post-receive
 
 echo 'Git repository set up successfully!'
+echo 'Setting up virtualenv for repo $REPO_DIR...'
+cd $SITE_DIR
+virtualenv venv -p `which python3`
+. venv/bin/activate
+pip install -r requirements.txt
+
+# Setting up the service file
+
 echo "Now add the repository to you local repo like this - git remote add live ssh://$USER@$SERVER_IP$REPO_DIR"

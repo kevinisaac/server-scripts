@@ -43,5 +43,8 @@ curl -L https://github.com/techwizrd/fishmarks/raw/master/install.fish | fish
 echo "Cloning kevinisaac/server-scripts"
 git clone https://github.com/kevinisaac/server-scripts.git
 
+echo "Setting permissions for directories..."
+sudo chown $USERNAME:$USERNAME ~ -R
+
 echo "Congratulations.. Setup for $USERNAME is done!"
 echo "You can now exit login to the server as: ssh $USERNAME@$SERVER_IP"

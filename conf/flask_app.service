@@ -1,0 +1,13 @@
+[Unit]
+Description=Gunicorn instance to serve the flask app
+After=network.target
+
+[Service]
+User=zephony
+Group=dev
+WorkingDirectory=/var/www/flaskapp
+Environment="PATH=/var/www/flaskapp/venv/bin"
+ExecStart=/var/www/flaskapp/venv/bin/gunicorn --workers 3 --bind localhost:5003 run:app --reload
+
+[Install]
+WantedBy=multi-user.target
