@@ -10,6 +10,8 @@ read -p "Enter the site's name ($REPO_NAME): " SITE_NAME            # /var/www/$
 
 REPO_DIR="/var/git/$REPO_NAME.git"
 SITE_DIR="/var/www/${SITE_NAME:-$REPO_NAME}"
+SERVICE_NAME=${SITE_NAME:-$REPO_NAME}
+NEW_SERVICE_FILE_NAME=$SERVICE_NAME.service
 
 
 sudo mkdir -p $REPO_DIR && cd $REPO_DIR && echo "Git repository directory set up at: $REPO_DIR"
@@ -25,9 +27,19 @@ git init --bare
 
 echo 'Create the post-receive hook..'
 cd hooks
-echo "
-#!/bin/sh
+echo "#!/bin/sh
 git --work-tree=$SITE_DIR --git-dir=$REPO_DIR checkout -f
+
+# Install the required Python packages
+cd $SITE_DIR
+. venv/bin/activate
+pip install -r requirements.txt
+
+# Restart the application server
+echo 'Restarting service $NEW_SERVICE_FILE_NAME.service...'
+sudo systemctl restart $NEW_SERVICE_FILE_NAME.service
+echo 'Service restarted successfully!'
+
 " > post-receive
 
 sudo chmod +x post-receive
@@ -49,7 +61,6 @@ fi
 pip install -r requirements.txt
 
 # Setting up the service file
-NEW_SERVICE_FILE_NAME=${SITE_NAME:-$REPO_NAME}.service
 NEW_SERVICE_FILE_PATH=/etc/systemd/system/$NEW_SERVICE_FILE_NAME
 echo "Setting up the service file $NEW_SERVICE_FILE_PATH..."
 sudo cp /home/$USERNAME/server-scripts/conf/systemd/flask_app.service $NEW_SERVICE_FILE_PATH
@@ -61,6 +72,12 @@ sudo systemctl daemon-reload && \
 sudo systemctl enable $NEW_SERVICE_FILE_NAME && \
 sudo systemctl restart $NEW_SERVICE_FILE_NAME && \
 echo 'Done!'
+
+echo "Allowing group $GROUPNAME to restart $NEW_SERVICE_FILE_NAME..."
+sudo echo "%$GROUPNAME ALL= NOPASSWD: /bin/systemctl stop $SERVICE_NAME*
+%$GROUPNAME ALL= NOPASSWD: /bin/systemctl restart $SERVICE_NAME*
+%$GROUPNAME ALL= NOPASSWD: /bin/systemctl start $SERVICE_NAME*
+" > /etc/sudoers.d/$GROUPNAME && echo 'Done!'
 
 # Nginx setup
 NEW_NGINX_FILE_NAME=${SITE_NAME:-$REPO_NAME}.conf
