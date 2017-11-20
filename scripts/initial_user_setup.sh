@@ -10,7 +10,7 @@ OMFTHEME=${OMFTHEME:-$DEFAULT_OMFTHEME}
 echo "Setting up SSH keys for $USERNAME..."
 mkdir ~/.ssh
 sudo chmod 700 ~/.ssh
-sudo chown $USERNAME:$USERNAME ~/.ssh
+sudo chown $USERNAME:$USERNAME ~/.ssh -R
 sudo cp /root/.ssh/authorized_keys ~/.ssh/
 sudo chmod 600 ~/.ssh/authorized_keys
 echo "Restarting ssh server..."
@@ -39,6 +39,9 @@ fish -c "omf install $OMFTHEME"
 #--------------------
 echo "Installing fishmarks for $USERNAME..."
 curl -L https://github.com/techwizrd/fishmarks/raw/master/install.fish | fish
+
+echo "Cloning kevinisaac/server-scripts"
+git clone https://github.com/kevinisaac/server-scripts.git
 
 echo "Congratulations.. Setup for $USERNAME is done!"
 echo "You can now exit login to the server as: ssh $USERNAME@$SERVER_IP"

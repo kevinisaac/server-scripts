@@ -25,7 +25,7 @@
 SERVER_IP=`ip route get 1 | awk '{print $NF;exit}'`
 DEFAULT_USERNAME='zephony'
 DEFAULT_GROUPNAME='dev'
-DEFAULT_ROOT_OMFTHEME='batman'
+DEFAULT_ROOT_OMFTHEME='flash'
 DEFAULT_PACKAGES='fish'
 
 ## Create users and groups
@@ -52,6 +52,8 @@ echo "Enter password for $USERNAME below.."
 passwd $USERNAME
 
 # Update, Upgrade and install all the required packages.
+echo "Adding the fish PPA..."
+apt-add-repository ppa:fish-shell/release-2
 apt-get update
 apt-get upgrade
 apt-get install $DEFAULT_PACKAGES
