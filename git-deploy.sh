@@ -37,6 +37,14 @@ echo 'Setting up virtualenv for repo $REPO_DIR...'
 cd $SITE_DIR
 virtualenv venv -p `which python3`
 . venv/bin/activate
+
+echo "Push your local repo code and then proceed (Press enter to continue): "
+read -s -n 1 key
+
+if [[ $key != "" ]]; then 
+    echo "Tasks left: push your code, set up systemd service file and start the service."
+fi
+
 pip install -r requirements.txt
 
 # Setting up the service file
