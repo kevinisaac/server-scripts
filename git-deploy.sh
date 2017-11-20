@@ -40,5 +40,19 @@ virtualenv venv -p `which python3`
 pip install -r requirements.txt
 
 # Setting up the service file
+NEW_SERVICE_FILE_NAME=${SITE_NAME:-$REPO_NAME}.service
+NEW_SERVICE_FILE_PATH=/etc/systemd/system/$NEW_SERVICE_FILE_NAME
+echo "Setting up the service file $NEW_SERVICE_FILE_PATH..."
+sudo cp /root/server-scripts/conf/flask_app.service $NEW_SERVICE_FILE_PATH
+sudo vim $NEW_SERVICE_FILE_PATH
+
+# Enabling and restarting the service
+echo "Enabling and restarting the service..." && \
+sudo systemctl daemon-reload && \
+sudo systemctl enable $NEW_SERVICE_FILE_NAME && \
+sudo systemctl restart $NEW_SERVICE_FILE_NAME && \
+echo 'Done!'
+
+# TODO: Nginx setup
 
 echo "Now add the repository to you local repo like this - git remote add live ssh://$USER@$SERVER_IP$REPO_DIR"
