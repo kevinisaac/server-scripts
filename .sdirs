@@ -4,6 +4,3 @@ export DIR_enabled="/etc/nginx/sites-enabled"
 export DIR_available="/etc/nginx/sites-available"
 export DIR_www="/var/www"
 export DIR_system="/etc/systemd/system"
-
-export DIR_qanda="/var/www/qanda"
-export DIR_gqanda="/var/git/qanda.git"
