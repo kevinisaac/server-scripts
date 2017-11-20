@@ -1,6 +1,9 @@
 #!/bin/bash
 
 SERVER_IP=`ip route get 1 | awk '{print $NF;exit}'`
+USERNAME=`whoami`
+# Getting the secondary group (the developer group) of the user
+GROUPNAME=`groups | awk '{print $NF}'`
 
 read -p "Enter the git repository's name: " REPO_NAME               # /var/git/$REPO_NAME.git
 read -p "Enter the site's name ($REPO_NAME): " SITE_NAME            # /var/www/$SITE_NAME
@@ -11,6 +14,10 @@ SITE_DIR="/var/www/${SITE_NAME:-$REPO_NAME}"
 
 sudo mkdir -p $REPO_DIR && cd $REPO_DIR && echo "Git repository directory set up at: $REPO_DIR"
 sudo mkdir $SITE_DIR && cd $REPO_DIR && echo "Site is located at: $SITE_DIR"
+
+echo "Setting up group for the directories.."
+sudo chown $USERNAME:$GROUPNAME /var/git -R
+sudo chown $USERNAME:$GROUPNAME /var/www/* -R
 
 # Git stuff
 echo 'Initializing bare Git repo..'
