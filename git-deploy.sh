@@ -9,8 +9,8 @@ REPO_DIR="/var/git/$REPO_NAME.git"
 SITE_DIR="/var/www/${SITE_NAME:-$REPO_NAME}"
 
 
-mkdir -p $REPO_DIR && cd $REPO_DIR && echo "Git repository directory set up at: $REPO_DIR"
-mkdir $SITE_DIR && cd $REPO_DIR && echo "Site is located at: $SITE_DIR"
+sudo mkdir -p $REPO_DIR && cd $REPO_DIR && echo "Git repository directory set up at: $REPO_DIR"
+sudo mkdir $SITE_DIR && cd $REPO_DIR && echo "Site is located at: $SITE_DIR"
 
 # Git stuff
 echo 'Initializing bare Git repo..'
@@ -23,7 +23,7 @@ echo "
 git --work-tree=$SITE_DIR --git-dir=$REPO_DIR checkout -f
 " > post-receive
 
-chmod +x post-receive
+sudo chmod +x post-receive
 
 echo 'Git repository set up successfully!'
 echo "Now add the repository to you local repo like this - git remote add live ssh://$USER@$SERVER_IP$REPO_DIR"
