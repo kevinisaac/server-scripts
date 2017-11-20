@@ -26,7 +26,7 @@ SERVER_IP=`ip route get 1 | awk '{print $NF;exit}'`
 DEFAULT_USERNAME='zephony'
 DEFAULT_GROUPNAME='dev'
 DEFAULT_ROOT_OMFTHEME='flash'
-DEFAULT_PACKAGES='nginx virtualenv python3-pip'
+DEFAULT_PACKAGES='nginx virtualenv python3-pip fish'
 
 ## Create users and groups
 read -p "Enter the name of the user ($DEFAULT_USERNAME): " USERNAME

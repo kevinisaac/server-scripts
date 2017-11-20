@@ -38,7 +38,8 @@ cd $SITE_DIR
 virtualenv venv -p `which python3`
 . venv/bin/activate
 
-echo "Push your local repo code and then proceed (Press enter to continue): "
+echo "Now add the repository to you local repo like this - git remote add live ssh://$USER@$SERVER_IP$REPO_DIR"
+echo "Then, push your local repo code and then proceed (Press enter to continue): "
 read -s -n 1 key
 
 if [[ $key != "" ]]; then 
@@ -61,7 +62,7 @@ sudo systemctl enable $NEW_SERVICE_FILE_NAME && \
 sudo systemctl restart $NEW_SERVICE_FILE_NAME && \
 echo 'Done!'
 
-# TODO: Nginx setup
+# Nginx setup
 NEW_NGINX_FILE_NAME=${SITE_NAME:-$REPO_NAME}.conf
 NEW_NGINX_FILE_PATH=/etc/nginx/sites-available/$NEW_NGINX_FILE_NAME
 echo "Setting up the nginx config file $NEW_NGINX_FILE_PATH..."
@@ -77,5 +78,3 @@ sudo systemctl restart nginx && echo 'Done!'
 # Allow port 80 via firewall
 echo "Allowing 'Nginx Full' on Nginx..."
 sudo ufw allow 'Nginx Full' && echo 'Done!'
-
-echo "Now add the repository to you local repo like this - git remote add live ssh://$USER@$SERVER_IP$REPO_DIR"
