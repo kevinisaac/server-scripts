@@ -23,35 +23,67 @@
 
 
 SERVER_IP=`ip route get 1 | awk '{print $NF;exit}'`
-DEFAULT_USERNAME='zephony'
+DEFAULT_USERNAMES='zephony'
 DEFAULT_GROUPNAME='dev'
 DEFAULT_ROOT_OMFTHEME='flash'
 DEFAULT_PACKAGES='nginx virtualenv python3-pip fish'
 
+install_user() {
+    echo "-----------------------------------------------"
+    USERNAME=$1
+    echo "Installing user $USERNAME..."
+
+    # Create user
+    useradd $USERNAME -G sudo,$GROUPNAME -m
+    echo "User '$USERNAME' created."
+
+    # Set password for $USERNAME
+    echo "Enter password for $USERNAME below.."
+    passwd $USERNAME
+
+    echo "Setting up SSH keys for $USERNAME..."
+    mkdir /home/$USERNAME/.ssh
+    sudo cp /root/.ssh/authorized_keys /home/$USERNAME/.ssh/
+    sudo chmod 700 /home/$USERNAME/.ssh
+    sudo chmod 600 /home/$USERNAME/.ssh/authorized_keys
+
+    echo "Changing default shell to fish for $USERNAME..."
+    sudo usermod $USERNAME -s `which fish`
+
+    # Copy the fishmarks of the major directories
+    echo "Preloading fish marks for $USERNAME..."
+    cp .sdirs /home/$USERNAME/
+
+    # Add vim configuration file
+    echo "Adding Vim configuration file..."
+    sudo cp conf/.vim /home/$USERNAME/ -r
+
+    echo "Owning home directory..."
+    sudo chown $USERNAME:$USERNAME /home/$USERNAME -R
+    echo "Done!"
+
+    echo "Done installing user $USERNAME!"
+    echo "-----------------------------------------------"
+}
+
 ## Create users and groups
-read -p "Enter the name of the user ($DEFAULT_USERNAME): " USERNAME
-USERNAME=${USERNAME:-$DEFAULT_USERNAME}
+read -p "Enter the name of the user ($DEFAULT_USERNAME): " USERNAMES
+USERNAMES=${USERNAMES:-$DEFAULT_USERNAMES}
 read -p "Enter the developers group name ($DEFAULT_GROUPNAME): " GROUPNAME
 GROUPNAME=${GROUPNAME:-$DEFAULT_GROUPNAME}
 read -p "Enter the omf theme you want to use for root ($DEFAULT_ROOT_OMFTHEME): " ROOT_OMFTHEME
 ROOT_OMFTHEME=${ROOT_OMFTHEME:-$DEFAULT_ROOT_OMFTHEME}
 
 
-# Create group and user
+# Create group and users
 groupadd $GROUPNAME
 echo "Group '$GROUPNAME' created."
-useradd $USERNAME -G sudo,$GROUPNAME -m
-echo "User '$USERNAME' created."
 echo "Adding root to $GROUPNAME..."
 adduser root $GROUPNAME && echo "Done!"
 
-
-# Set passwords for root and $USERNAME
+# Set passwords for root
 echo "Enter root password below.."
 passwd
-# echo "Enter password for $USERNAME below.."
-echo "Enter password for $USERNAME below.."
-passwd $USERNAME
 
 # Update, Upgrade and install all the required packages.
 echo "Adding the fish PPA..."
@@ -62,6 +94,12 @@ apt-get install $DEFAULT_PACKAGES
 
 # Add vim configuration file to root user
 sudo cp conf/.vim /root/ -r
+
+# Install all the users
+for user in $USERNAMES
+do
+    install_user $user
+done
 
 # Block all the ports except 22.
 # By default, ufw blocks incoming to all the ports.
@@ -85,7 +123,7 @@ echo "Done setting up UFW (firewall)!"
 
 # Don't exit your user session, until you make sure that the port 22 is open.
 # To check that, open a new terminal and try to login.
-# If it doesn't work, then there is something is wrong in your rule. 
+# If it doesn't work, then there probably is something is wrong in the rule. 
 
 # Create directories to store configuration files and scripts.
 # mkdir conf scripts logs
@@ -117,17 +155,8 @@ echo "Done setting up UFW (firewall)!"
 
 ## Set up ssh keys -------------------------------------------------------------------------
 
-echo "Setting up SSH keys for $USERNAME..."
-echo "Enter root password if asked.."
-mkdir ~/.ssh
-sudo chmod 700 ~/.ssh
-sudo cp /root/.ssh/authorized_keys ~/.ssh/
-sudo chmod 600 ~/.ssh/authorized_keys
-echo "Done!"
-
-echo "Changing default shell to fish for root and $USERNAME..."
-sudo usermod root -s /usr/bin/fish
-sudo usermod $USERNAME -s /usr/bin/fish
+echo "Changing default shell to fish for root..."
+sudo usermod root -s `which fish`
 echo "Done!"
 
 ## Set up SSH server
@@ -135,9 +164,6 @@ echo "Configuring SSH server..."
 vim /etc/ssh/sshd_config
 echo "Restarting ssh server..."
 systemctl restart ssh
-
-## Add vim configuration file
-cp conf/.vim ~/ -r
 
 # Install oh-my-fish for root user:
 # -------------------
@@ -167,5 +193,3 @@ echo "Now, login as $USERNAME and execute: bash scripts/initial_user_setup.sh"
 # Thats it for the initial setup of server. This setup is common for every machine
 # Next steps depends on the server's role. 
 # Follow the instructions in the files that is specific for the server's role.
-
-# Thank you! Have a nice day!.
