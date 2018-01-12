@@ -26,7 +26,7 @@ SERVER_IP=`ip route get 1 | awk '{print $NF;exit}'`
 DEFAULT_USERNAMES='zephony'
 DEFAULT_GROUPNAME='dev'
 DEFAULT_ROOT_OMFTHEME='flash'
-DEFAULT_PACKAGES='nginx virtualenv python3-pip fish'
+DEFAULT_PACKAGES='nginx virtualenv python3-pip fish tmux'
 
 install_user() {
     echo "-----------------------------------------------"
@@ -67,7 +67,7 @@ install_user() {
 }
 
 ## Create users and groups
-read -p "Enter the name of the user ($DEFAULT_USERNAME): " USERNAMES
+read -p "Enter the name of the user ($DEFAULT_USERNAMES): " USERNAMES
 USERNAMES=${USERNAMES:-$DEFAULT_USERNAMES}
 read -p "Enter the developers group name ($DEFAULT_GROUPNAME): " GROUPNAME
 GROUPNAME=${GROUPNAME:-$DEFAULT_GROUPNAME}
