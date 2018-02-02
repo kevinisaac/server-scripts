@@ -36,8 +36,8 @@ cd $SITE_DIR
 pip install -r requirements.txt
 
 # Restart the application server
-echo 'Restarting service $NEW_SERVICE_FILE_NAME.service...'
-sudo systemctl restart $NEW_SERVICE_FILE_NAME.service
+echo 'Restarting service $NEW_SERVICE_FILE_NAME...'
+sudo systemctl restart $NEW_SERVICE_FILE_NAME
 echo 'Service restarted successfully!'
 
 " > post-receive
