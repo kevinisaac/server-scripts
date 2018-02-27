@@ -188,7 +188,7 @@ echo "Preloading fish marks for root.."
 cp .sdirs ~/ && echo 'Done!'
 
 echo "Congratulations.. Your initial server setup is done!"
-echo "Now, login as $USERNAME and execute: bash scripts/initial_user_setup.sh"
+# echo "Now, login as $USERNAME and execute: bash scripts/initial_user_setup.sh"
 
 # Thats it for the initial setup of server. This setup is common for every machine
 # Next steps depends on the server's role. 
