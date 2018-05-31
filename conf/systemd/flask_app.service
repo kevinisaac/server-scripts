@@ -7,6 +7,7 @@ User=zephony
 Group=dev
 WorkingDirectory=/var/www/flaskapp
 Environment="PATH=/var/www/flaskapp/venv/bin"
+Environment="APP_ENV=demo"
 ExecStart=/var/www/flaskapp/venv/bin/gunicorn --workers 3 --bind localhost:5003 run:app --reload
 
 [Install]
