@@ -7,6 +7,7 @@ GROUPNAME=`groups | awk '{print $NF}'`
 
 read -p "Enter the git repository's name: " REPO_NAME               # /var/git/$REPO_NAME.git
 read -p "Enter the site's name ($REPO_NAME): " SITE_NAME            # /var/www/$SITE_NAME
+read -p "Enter the checkout branch (demo/master/live): " CO_BRANCH  # demo/master/live
 
 REPO_DIR="/var/git/$REPO_NAME.git"
 SITE_DIR="/var/www/${SITE_NAME:-$REPO_NAME}"
@@ -28,7 +29,7 @@ git init --bare
 echo 'Create the post-receive hook..'
 cd hooks
 echo "#!/bin/sh
-git --work-tree=$SITE_DIR --git-dir=$REPO_DIR checkout -f
+git --work-tree=$SITE_DIR --git-dir=$REPO_DIR checkout $CO_BRANCH -f
 
 # Install the required Python packages
 cd $SITE_DIR
