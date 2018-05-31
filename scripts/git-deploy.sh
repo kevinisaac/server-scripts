@@ -7,7 +7,7 @@ GROUPNAME=`groups | awk '{print $NF}'`
 
 read -p "Enter the git repository's name: " REPO_NAME               # /var/git/$REPO_NAME.git
 read -p "Enter the site's name ($REPO_NAME): " SITE_NAME            # /var/www/$SITE_NAME
-read -p "Enter the checkout branch (demo/master/live): " CO_BRANCH  # demo/master/live
+read -p "Enter the checkout branch (demo/live): " CO_BRANCH         # demo/live
 
 REPO_DIR="/var/git/$REPO_NAME.git"
 SITE_DIR="/var/www/${SITE_NAME:-$REPO_NAME}"
@@ -51,7 +51,7 @@ cd $SITE_DIR
 virtualenv venv -p `which python3`
 . venv/bin/activate
 
-echo "Now add the repository to you local repo like this - git remote add live ssh://$USER@$SERVER_IP$REPO_DIR"
+echo "Now add the repository to you local repo like this - git remote add $CO_BRANCH ssh://$USER@$SERVER_IP$REPO_DIR"
 echo "Then, push your local repo code and then proceed (Press enter to continue): "
 read -s -n 1 key
 
