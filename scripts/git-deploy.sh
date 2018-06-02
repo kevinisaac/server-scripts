@@ -38,9 +38,11 @@ pip install -r requirements.txt
 
 # Restart the application server
 echo 'Restarting service $NEW_SERVICE_FILE_NAME...'
-sudo systemctl restart $NEW_SERVICE_FILE_NAME
-echo 'Service restarted successfully!'
-
+if sudo systemctl restart $NEW_SERVICE_FILE_NAME; then
+    echo 'Service restarted successfully!'
+else
+    echo 'ERROR: Service not restarted'
+fi
 " > post-receive
 
 sudo chmod +x post-receive
