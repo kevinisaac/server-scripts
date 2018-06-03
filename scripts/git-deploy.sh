@@ -36,12 +36,90 @@ cd $SITE_DIR
 . venv/bin/activate
 pip install -r requirements.txt
 
+$COMMIT_USER=`git log -1 | sed -n 2p | awk '{print $2}'`
+$COMMIT_ID=`git log -1 | sed -n 1p | awk '{print $2}' | cut -c 28-`
+$COMMIT_MESSAGE=`git log -1 | sed -n 5p`
+$APP_NAME=\"Alibalance\"
+$APP_SNAME=\"alibalance\"
+$APP_URL=\"alibalance.getpreview.io\"
+$SLACK_CHANNEL=\"#kevin_private\"
+$SLACK_APP_URL=\"https://hooks.slack.com/services/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\"
+
 # Restart the application server
 echo 'Restarting service $NEW_SERVICE_FILE_NAME...'
 if sudo systemctl restart $NEW_SERVICE_FILE_NAME; then
     echo 'Service restarted successfully!'
+
+    curl --header 'Content-type: application/json' \
+        --request POST \
+        --data \"{
+            'channel': '$SLACK_CHANNEL',
+            'text': 'Someone has deployed $APP_NAME to the servers! ($APP_URL)',
+            'attachments': [
+                {
+                    'color': '#3AA3E3',
+                    'title': 'Latest Commit',
+                    'title_link': 'https://github.com/Zephony/$APP_SNAME/commits/demo',
+                    'fields': [
+                        {
+                            'value': '\`$COMMIT_ID\`: $COMMIT_MESSAGE',
+                        },
+                        {
+                            'title': 'Status',
+                            'value': 'success',
+                            'short': true,
+                        },
+                        {
+                            'title': 'Branch',
+                            'value': 'demo',
+                            'short': true,
+                        }
+                    ],
+                    'author_name': '$COMMIT_USER',
+                    'author_icon': 'https://i.imgur.com/1xkPK57.png',
+                    'footer': 'Deployed to DigitalOcean',
+                    'footer_icon': 'https://img.stackshare.io/service/295/DO_Logo_icon_blue.png'
+                }
+            ]
+        }\" \
+    '$SLACK_APP_URL'
+
 else
     echo 'ERROR: Service not restarted'
+
+    curl --header 'Content-type: application/json' \
+        --request POST \
+        --data \"{
+            'channel': '$SLACK_CHANNEL',
+            'text': 'Look at the mess you have made, deploying broken apps! ($APP_URL)',
+            'attachments': [
+                {
+                    'color': '#C91D12',
+                    'title': 'Latest Commit',
+                    'title_link': 'https://github.com/Zephony/$APP_SNAME/commits/demo',
+                    'fields': [
+                        {
+                            'value': '\`$COMMIT_ID\`: $COMMIT_MESSAGE',
+                        },
+                        {
+                            'title': 'Status',
+                            'value': 'error',
+                            'short': true,
+                        },
+                        {
+                            'title': 'Branch',
+                            'value': 'demo',
+                            'short': true,
+                        }
+                    ],
+                    'author_name': '$COMMIT_USER',
+                    'author_icon': 'https://i.imgur.com/1xkPK57.png',
+                    'footer': 'Deployed to DigitalOcean',
+                    'footer_icon': 'https://img.stackshare.io/service/295/DO_Logo_icon_blue.png'
+                }
+            ]
+        }\" \
+    '$SLACK_APP_URL'
 fi
 " > post-receive
 
