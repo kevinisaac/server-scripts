@@ -36,14 +36,14 @@ cd $SITE_DIR
 . venv/bin/activate
 pip install -r requirements.txt
 
-$COMMIT_USER=`git log -1 | sed -n 2p | awk '{print $2}'`
-$COMMIT_ID=`git log -1 | sed -n 1p | awk '{print $2}' | cut -c 28-`
-$COMMIT_MESSAGE=`git log -1 | sed -n 5p`
-$APP_NAME=\"Alibalance\"
-$APP_SNAME=\"alibalance\"
-$APP_URL=\"alibalance.getpreview.io\"
-$SLACK_CHANNEL=\"#kevin_private\"
-$SLACK_APP_URL=\"https://hooks.slack.com/services/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\"
+COMMIT_USER=`git log -1 | sed -n 2p | awk '{print $2}'`
+COMMIT_ID=`git log -1 | sed -n 1p | awk '{print $2}' | cut -c 28-`
+COMMIT_MESSAGE=`git log -1 | sed -n 5p`
+APP_NAME=\"Alibalance\"
+APP_SNAME=\"alibalance\"
+APP_URL=\"alibalance.getpreview.io\"
+SLACK_CHANNEL=\"#kevin_private\"
+SLACK_APP_URL=\"https://hooks.slack.com/services/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\"
 
 # Restart the application server
 echo 'Restarting service $NEW_SERVICE_FILE_NAME...'
