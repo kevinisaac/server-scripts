@@ -36,9 +36,12 @@ cd $SITE_DIR
 . venv/bin/activate
 pip install -r requirements.txt
 
+cd $REPO_DIR
+
 COMMIT_USER=\`git log -1 | sed -n 2p | awk '{print $2}'\`
-COMMIT_ID=\`git log -1 | sed -n 1p | awk '{print $2}' | cut -c 28-\`
+COMMIT_ID=\`git log -1 | sed -n 1p | awk '{print \$2}' | cut -c 28-\`
 COMMIT_MESSAGE=\`git log -1 | sed -n 5p\`
+CURRENT_BRANCH=\`git branch | awk '{print \$2}'\`
 APP_NAME=\"Alibalance\"
 APP_SNAME=\"alibalance\"
 APP_URL=\"alibalance.getpreview.io\"
@@ -82,7 +85,7 @@ if sudo systemctl restart $NEW_SERVICE_FILE_NAME; then
                 }
             ]
         }\" \
-    '\$SLACK_APP_URL'
+    \"\$SLACK_APP_URL\"
 
 else
     echo 'ERROR: Service not restarted'
