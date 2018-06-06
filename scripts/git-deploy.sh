@@ -14,117 +14,27 @@ SITE_DIR="/var/www/${SITE_NAME:-$REPO_NAME}"
 SERVICE_NAME=${SITE_NAME:-$REPO_NAME}
 NEW_SERVICE_FILE_NAME=$SERVICE_NAME.service
 
+# Install jinja2
+sudo pip3 install jinja2
 
 sudo mkdir -p $REPO_DIR && cd $REPO_DIR && echo "Git repository directory set up at: $REPO_DIR"
 sudo mkdir $SITE_DIR && cd $REPO_DIR && echo "Site is located at: $SITE_DIR"
 
 echo "Setting up group for the directories.."
-sudo chown $USERNAME:$GROUPNAME /var/git -R
-sudo chown $USERNAME:$GROUPNAME /var/www -R
+sudo chown $USERNAME:$GROUPNAME $REPO_DIR -R
+sudo chown $USERNAME:$GROUPNAME $SITE_DIR -R
+
+sudo find $REPO_DIR -type d -exec chmod g+s {} +
+sudo find $SITE_DIR -type d -exec chmod g+s {} +
 
 # Git stuff
 echo 'Initializing bare Git repo..'
 git init --bare
 
 echo 'Create the post-receive hook..'
+
 cd hooks
-echo "#!/bin/sh
-git --work-tree=$SITE_DIR --git-dir=$REPO_DIR checkout $CO_BRANCH -f
-
-# Install the required Python packages
-cd $SITE_DIR
-. venv/bin/activate
-pip install -r requirements.txt
-
-cd $REPO_DIR
-
-COMMIT_USER=\`git log -1 | sed -n 2p | awk '{print $2}'\`
-COMMIT_ID=\`git log -1 | sed -n 1p | awk '{print \$2}' | cut -c 28-\`
-COMMIT_MESSAGE=\`git log -1 | sed -n 5p\`
-CURRENT_BRANCH=\`git branch | awk '{print \$2}'\`
-APP_NAME=\"Alibalance\"
-APP_SNAME=\"alibalance\"
-APP_URL=\"alibalance.getpreview.io\"
-SLACK_CHANNEL=\"#kevin_private\"
-SLACK_APP_URL=\"https://hooks.slack.com/services/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\"
-
-# Restart the application server
-echo 'Restarting service $NEW_SERVICE_FILE_NAME...'
-if sudo systemctl restart $NEW_SERVICE_FILE_NAME; then
-    echo 'Service restarted successfully!'
-
-    curl --header 'Content-type: application/json' \
-        --request POST \
-        --data \"{
-            'channel': '$SLACK_CHANNEL',
-            'text': 'Someone has deployed \$APP_NAME to the servers! (\$APP_URL)',
-            'attachments': [
-                {
-                    'color': '#3AA3E3',
-                    'title': 'Latest Commit',
-                    'title_link': 'https://github.com/Zephony/\$APP_SNAME/commits/demo',
-                    'fields': [
-                        {
-                            'value': '\`\$COMMIT_ID\`: \$COMMIT_MESSAGE',
-                        },
-                        {
-                            'title': 'Status',
-                            'value': 'success',
-                            'short': true,
-                        },
-                        {
-                            'title': 'Branch',
-                            'value': 'demo',
-                            'short': true,
-                        }
-                    ],
-                    'author_name': '\$COMMIT_USER',
-                    'author_icon': 'https://i.imgur.com/1xkPK57.png',
-                    'footer': 'Deployed to DigitalOcean',
-                    'footer_icon': 'https://img.stackshare.io/service/295/DO_Logo_icon_blue.png'
-                }
-            ]
-        }\" \
-    \"\$SLACK_APP_URL\"
-
-else
-    echo 'ERROR: Service not restarted'
-
-    curl --header 'Content-type: application/json' \
-        --request POST \
-        --data \"{
-            'channel': '$SLACK_CHANNEL',
-            'text': 'Look at the mess you have made, deploying broken apps! ($APP_URL)',
-            'attachments': [
-                {
-                    'color': '#C91D12',
-                    'title': 'Latest Commit',
-                    'title_link': 'https://github.com/Zephony/$APP_SNAME/commits/demo',
-                    'fields': [
-                        {
-                            'value': '\`$COMMIT_ID\`: $COMMIT_MESSAGE',
-                        },
-                        {
-                            'title': 'Status',
-                            'value': 'error',
-                            'short': true,
-                        },
-                        {
-                            'title': 'Branch',
-                            'value': 'demo',
-                            'short': true,
-                        }
-                    ],
-                    'author_name': '$COMMIT_USER',
-                    'author_icon': 'https://i.imgur.com/1xkPK57.png',
-                    'footer': 'Deployed to DigitalOcean',
-                    'footer_icon': 'https://img.stackshare.io/service/295/DO_Logo_icon_blue.png'
-                }
-            ]
-        }\" \
-    '$SLACK_APP_URL'
-fi
-" > post-receive
+# Create the post-receive file
 
 sudo chmod +x post-receive
 
