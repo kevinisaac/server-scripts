@@ -24,8 +24,9 @@ echo "Setting up group for the directories.."
 sudo chown $USERNAME:$GROUPNAME $REPO_DIR -R
 sudo chown $USERNAME:$GROUPNAME $SITE_DIR -R
 
-sudo find $REPO_DIR -type d -exec chmod g+s {} +
-sudo find $SITE_DIR -type d -exec chmod g+s {} +
+# TODO - Check if g+sw works
+sudo find $REPO_DIR -type d -exec chmod g+sw {} +
+sudo find $SITE_DIR -type d -exec chmod g+sw {} +
 
 # Git stuff
 echo 'Initializing bare Git repo..'
