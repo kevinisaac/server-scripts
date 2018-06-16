@@ -25,11 +25,11 @@ echo 'Restarting service {{NEW_SERVICE_FILE_NAME}}...'
 if sudo systemctl restart {{NEW_SERVICE_FILE_NAME}}; then
     echo 'Service restarted successfully!'
 
-    curl --header 'Content-type: application/json' 
-        --request POST 
+    curl --header 'Content-type: application/json' \
+        --request POST \
         --data "{
-            'channel': {{SLACK_CHANNEL}},
-            'text': 'Someone has deployed {{APP_NAME}} to the servers! ({{APP_URL}})',
+            'channel': '{{SLACK_CHANNEL}}',
+            'text': 'Someone has deployed {{APP_NAME}} to the servers!',
             'attachments': [
                 {
                     'color': '#3AA3E3',
@@ -52,18 +52,18 @@ if sudo systemctl restart {{NEW_SERVICE_FILE_NAME}}; then
                     ],
                     'author_name': '$COMMIT_USER',
                     'author_icon': 'https://i.imgur.com/1xkPK57.png',
-                    'footer': 'Deployed to DigitalOcean',
+                    'footer': '<{{APP_URL}}|Deployed to DigitalOcean>',
                     'footer_icon': 'https://img.stackshare.io/service/295/DO_Logo_icon_blue.png'
                 }
             ]
-        }" 
+        }" \
     "{{SLACK_APP_URL}}"
 
 else
     echo 'ERROR: Service not restarted'
 
-    curl --header 'Content-type: application/json' 
-        --request POST 
+    curl --header 'Content-type: application/json' \
+        --request POST \
         --data "{
             'channel': '{{SLACK_CHANNEL}}',
             'text': 'Look at the mess you have made, deploying broken apps! ({{APP_URL}})',
@@ -89,11 +89,11 @@ else
                     ],
                     'author_name': '$COMMIT_USER',
                     'author_icon': 'https://i.imgur.com/1xkPK57.png',
-                    'footer': 'Deployed to DigitalOcean',
+                    'footer': '<{{APP_URL}}|Deployed to DigitalOcean>',
                     'footer_icon': 'https://img.stackshare.io/service/295/DO_Logo_icon_blue.png'
                 }
             ]
-        }" 
+        }" \
     "{{SLACK_APP_URL}}"
 fi
 
