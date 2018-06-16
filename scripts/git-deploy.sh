@@ -90,7 +90,7 @@ sudo systemctl restart nginx && echo 'Done!'
 # Setting fish marks
 echo "Setting fish marks..."
 cat "export DIR_g$REPO_NAME=\"$REPO_DIR\"" >> ~/.sdirs
-cat "export DIR_$SITE_NAME=\"$SITE_DIR\"" >> ~/.sdirs
+cat "export DIR_$REPO_NAME=\"$SITE_DIR\"" >> ~/.sdirs
 echo "Done!"
 
 echo "Setting permissions for directories..."
