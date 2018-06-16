@@ -99,3 +99,4 @@ sudo chown $USERNAME:$USERNAME ~ -R && echo "Done!"
 # Allow port 80 via firewall
 echo "Allowing 'Nginx Full' on Nginx..."
 sudo ufw allow 'Nginx Full' && echo 'Done!'
+

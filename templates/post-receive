@@ -8,7 +8,7 @@ pip install -r requirements.txt
 
 cd {{REPO_DIR}}
 
-COMMIT_USER=`git log -1 | sed -n 2p | awk '{print $2}'
+COMMIT_USER=`git log -1 | sed -n 2p | awk '{print $2}'`
 COMMIT_ID=`git log -1 | sed -n 1p | awk '{print $2}' | cut -c 28-`
 COMMIT_MESSAGE=`git log -1 | sed -n 5p`
 CURRENT_BRANCH=`git branch | awk '{print $2}'`
