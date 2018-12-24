@@ -84,7 +84,6 @@ sudo vim $NEW_NGINX_FILE_PATH
 # Enabling and restarting the service
 echo "Enabling the site and restarting nginx..." && \
 sudo ln -s /etc/nginx/sites-available/$NEW_NGINX_FILE_NAME /etc/nginx/sites-enabled/$NEW_NGINX_FILE_NAME
-sudo rm /etc/nginx/sites-enabled/default
 sudo systemctl restart nginx && echo 'Done!'
 
 # Setting fish marks
