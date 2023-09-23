@@ -23,7 +23,7 @@
 
 
 SERVER_IP=`ip route get 1 | awk '{print $NF;exit}'`
-DEFAULT_USERNAMES='zephony'
+DEFAULT_USERNAMES='kevin'
 DEFAULT_GROUPNAME='dev'
 DEFAULT_ROOT_OMFTHEME='flash'
 DEFAULT_PACKAGES='nginx virtualenv python3-pip fish tmux'
